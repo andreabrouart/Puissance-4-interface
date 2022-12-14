@@ -157,6 +157,11 @@ public void tasserColonne(int col){
          }
      }
  } 
+public void tasserGrille(){
+    for (int i=0; i<7; i++){
+        tasserColonne(i);
+    }
+}
 public boolean colonneRemplie(int col){
     if (presenceJeton(5,col)==true){
         return true;

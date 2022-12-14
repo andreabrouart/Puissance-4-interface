@@ -34,13 +34,28 @@ public class fenetreDeJeu extends javax.swing.JFrame {
                 CelluleDeGrille c = cellGraph.celluleAssociee;
                 if (c.presenceJeton()== false) return;
                 
-                if (c.lireCouleurDuJeton()=="rouge"){
+                if (c.lireCouleurDuJeton()== joueurCourant.getCouleur()){
+                    textemessage.setText("Le joueur "+joueurCourant.getNom()+" récupère un de ses jetons");
                     
+                    Jeton jrecup = c.recupererJeton();
+                    joueurCourant.ajouterJeton(jrecup);
+                    joueurSuivant();
+                }else{
+                    if (joueurCourant.getNombreDesintegrateurs()>0){
+                        textemessage.setText("Le joueur "+joueurCourant.getNom()+" désintegre un jeton adverse");
+                        c.supprimerJeton();
+                        joueurCourant.utiliserDesintegrateur();
+                        joueurSuivant();
+                    }
+                    else return; 
                 }
+                plateau.tasserGrille();
                 
-                
-                        
-            textemessage.setText("un bouton a été cliqué");
+                panneau_grille.repaint();
+        lbl_j1_desint.setText(listeJoueur[0].getNombreDesintegrateurs()+"");
+        lbl_j2_desint.setText(listeJoueur[1].getNombreDesintegrateurs()+"");
+        
+      
             }      
             });
                 panneau_grille.add(cellGraph);
@@ -48,6 +63,51 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         }
     }
 
+    public void verifierVictoire() {
+          boolean vict_j1 = plateau.partieGagnante(listeJoueur[0].getCouleur());
+        boolean vict_j2 = plateau.partieGagnante(listeJoueur[1].getCouleur());
+        
+        if ( vict_j1 && ! vict_j2) {
+            textemessage.setText("Victoireeeee de "+listeJoueur[0].getNom());
+        btn_col_0.setEnabled(false);
+        btn_col_1.setEnabled(false);
+        btn_col_2.setEnabled(false);
+        btn_col_3.setEnabled(false);
+        btn_col_4.setEnabled(false);
+        btn_col_5.setEnabled(false);
+        btn_col_6.setEnabled(false);
+        }
+        if ( vict_j2 && ! vict_j1) {
+            textemessage.setText("Victoireeeee de "+listeJoueur[1].getNom());
+        btn_col_0.setEnabled(false);
+        btn_col_1.setEnabled(false);
+        btn_col_2.setEnabled(false);
+        btn_col_3.setEnabled(false);
+        btn_col_4.setEnabled(false);
+        btn_col_5.setEnabled(false);
+        btn_col_6.setEnabled(false);
+        }
+        if (vict_j1 && vict_j2){
+            if ( joueurCourant == listeJoueur[0]){
+                textemessage.setText("Victoire de "+listeJoueur[1].getNom()+"faute de jeu de l'autre joueur");
+                btn_col_0.setEnabled(false);
+                btn_col_1.setEnabled(false);
+                btn_col_2.setEnabled(false);
+                btn_col_3.setEnabled(false);
+                btn_col_4.setEnabled(false);
+                btn_col_5.setEnabled(false);
+                btn_col_6.setEnabled(false);
+            }else{ textemessage.setText("Victoire de "+listeJoueur[0].getNom()+"faute de jeu de l'autre joueur");
+        btn_col_0.setEnabled(false);
+        btn_col_1.setEnabled(false);
+        btn_col_2.setEnabled(false);
+        btn_col_3.setEnabled(false);
+        btn_col_4.setEnabled(false);
+        btn_col_5.setEnabled(false);
+        btn_col_6.setEnabled(false);
+            }  
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -280,6 +340,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(2) == true) {
             btn_col_2.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_2ActionPerformed
 
@@ -289,6 +350,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(4) == true) {
             btn_col_4.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_4ActionPerformed
 
@@ -298,6 +360,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(0) == true) {
             btn_col_0.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_0ActionPerformed
 
@@ -307,6 +370,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(1) == true) {
             btn_col_1.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_1ActionPerformed
 
@@ -316,6 +380,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(3) == true) {
             btn_col_3.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_3ActionPerformed
 
@@ -325,6 +390,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(5) == true) {
             btn_col_5.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_5ActionPerformed
 
@@ -334,6 +400,7 @@ public class fenetreDeJeu extends javax.swing.JFrame {
         if (plateau.colonneRemplie(6) == true) {
             btn_col_6.setEnabled(false);
         }
+        verifierVictoire();
         joueurSuivant();
     }//GEN-LAST:event_btn_col_6ActionPerformed
     public boolean jouerDansColonne(int ind_col) {
